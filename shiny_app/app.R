@@ -12,18 +12,11 @@ library(dplyr) #data manipulation
 library(plotly) #charts
 library(shiny) #shiny app
 library(readr)
-library(here)
 library(tidyr) #preparing data - not needed unless new data coming through
 
 
 #Read in data
-data <- readRDS(here("/shiny_app/data/epilepsy_incidence.rds"))
-
-#ScotPHO logo. 
-#Needs to be https address or if local in code 64 (the latter does not work with 4.7 plotly)
-scotpho_logo <-  list(source ="https://raw.githubusercontent.com/ScotPHO/plotly-charts/master/scotpho.png",
-                      xref = "paper", yref = "paper",
-                      x= -0.09, y= 1.2, sizex = 0.22, sizey = 0.18, opacity = 1)         
+data <- readRDS("data/epilepsy_incidence.rds")
          
          
 ############################.
@@ -36,7 +29,7 @@ ui <- fluidPage(style="width: 650px; height: 500px; ",
                     h4("Chart 1. New cases (incidence) per 100,000 population with a 
                        main diagnosis of epilepsy, by age and sex, Scotland"),
                     div(style = "width: 50%; float: left;",
-                        selectizeInput("sex", label = "Select sex/es",
+                        selectizeInput("sex", label = "Select sex",
                                        choices = c("Female", "Male"), 
                                        multiple = TRUE, 
                                        selected = c("Female", "Male"),
@@ -89,6 +82,14 @@ server <- function(input, output) {
                         data_agesex$sex_agegrp, "<br>",
                         "Age-sex standardised rate: ", data_agesex$measure))
     
+    
+    # Buttons to remove
+    bttn_remove <- list('select2d',
+                        'lasso2d', 'zoomIn2d',
+                        'zoomOut2d','autoScale2d', 'toggleSpikelines',
+                        'hoverCompareCartesian',
+                        'hoverClosestCartesian', 'zoom2d', 'pan2d', 'resetScale2d')
+    
     #Create plot
     plot <- plot_ly(data=data_agesex, x=~year, y = ~measure, color = ~sex_agegrp,
                     colors = c('#2166ac','#4393c3', '#92c5de', '#053061', 
@@ -102,10 +103,8 @@ server <- function(input, output) {
              yaxis = list(title = "Age-sex standardised rate<br> per 100,000 population", rangemode="tozero", fixedrange=TRUE), 
              xaxis = list(title = "Financial year",  fixedrange=TRUE, tickangle = 270),  
              font = list(family = 'Arial, sans-serif'), #font
-             margin = list(pad = 4, t = 50, r = 30), #margin-paddings
-             #hovermode = 'false', #to get hover compare mode as default
-             images = scotpho_logo) %>% 
-      config(displayModeBar= T, displaylogo = F) #taking out plotly logo and collaborate button
+             margin = list(pad = 4, t = 50, r = 30)) %>% #margin-paddings
+      config(displayModeBar= T, displaylogo = F, modeBarButtonsToRemove = bttn_remove) #taking out plotly logo and collaborate button
   }
   ) 
 } # end of server part
