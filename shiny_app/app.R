@@ -12,7 +12,6 @@ library(dplyr) #data manipulation
 library(plotly) #charts
 library(shiny) #shiny app
 library(readr)
-library(tidyr) #preparing data - not needed unless new data coming through
 
 
 #Read in data
@@ -80,7 +79,7 @@ server <- function(input, output) {
     #Information to be displayed in tooltip
     tooltip <- c(paste0(data_agesex$year, "<br>",
                         data_agesex$sex_agegrp, "<br>",
-                        "Age-sex standardised rate: ", data_agesex$measure))
+                        "Age-sex standardised rate: ", data_agesex$rate))
     
     
     # Buttons to remove
@@ -91,7 +90,7 @@ server <- function(input, output) {
                         'hoverClosestCartesian', 'zoom2d', 'pan2d', 'resetScale2d')
     
     #Create plot
-    plot <- plot_ly(data=data_agesex, x=~year, y = ~measure, color = ~sex_agegrp,
+    plot <- plot_ly(data=data_agesex, x=~year, y = ~rate, color = ~sex_agegrp,
                     colors = c('#2166ac','#4393c3', '#92c5de', '#053061', 
                                '#8c510a', '#bf812d', '#dfc27d', '#543005'),
                     type = "scatter", mode = 'lines+markers',
