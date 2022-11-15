@@ -94,6 +94,9 @@ server <- function(input, output) {
                     colors = c('#2166ac','#4393c3', '#92c5de', '#053061', 
                                '#8c510a', '#bf812d', '#dfc27d', '#543005'),
                     type = "scatter", mode = 'lines+markers',
+                    symbol= ~sex_agegrp,
+                    symbols = list('circle', 'x','triangle-down', 'square', 'diamond', 'star-square', 'cross', 'bowtie'),
+                    marker = list(size= 8),
                     width = 650, height = 350,
                     text=tooltip,
                     hoverinfo="text") %>%
