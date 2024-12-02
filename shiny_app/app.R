@@ -15,7 +15,6 @@ library(readr)
 library(shinymanager)
 
 
-
 #Read in data
 data <- readRDS("data/epilepsy_incidence.rds")
 
