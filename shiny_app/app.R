@@ -12,18 +12,21 @@ library(dplyr) #data manipulation
 library(plotly) #charts
 library(shiny) #shiny app
 library(readr)
+library(shinymanager)
+
 
 
 #Read in data
 data <- readRDS("data/epilepsy_incidence.rds")
-         
+
+
          
 ############################.
 ## UI ----
 ############################.
 #Height and widths as percentages to allow responsiveness
 #Using divs as issues with classing css 
-ui <- fluidPage(style="width: 650px; height: 500px; ", 
+ui <- secure_app(fluidPage(style="width: 650px; height: 500px; ", 
                 div(style= "width:100%", #Filters on top of page
                     h4("Chart 1. New cases (incidence) per 100,000 population with a 
                        main diagnosis of epilepsy, by age and sex, Scotland"),
@@ -44,7 +47,7 @@ ui <- fluidPage(style="width: 650px; height: 500px; ",
                 div(style= "width:100%; float: left;", #Main panel
                     plotlyOutput("chart", width = "100%", height = "350px"),
                     p(div(style = "width: 25%; float: left;", #Footer
-                          HTML("Source: <a href='https://www.ndc.scot.nhs.uk/National-Datasets/data.asp?SubID=5'>PHS, SMR01</a>")),
+                          HTML("Source: <a href='https://publichealthscotland.scot/resources-and-tools/health-intelligence-and-data-management/national-data-catalogue/national-datasets/search-the-datasets/general-acute-inpatient-and-day-case-scottish-morbidity-record-smr01/'target='_blank'>PHS, SMR01</a>")),
                       div(style = "width: 25%; float: right;",
                           downloadLink('download_data', 'Download data')),
                       div(style = "width: 100%; float: left;",
@@ -58,12 +61,31 @@ ui <- fluidPage(style="width: 650px; height: 500px; ",
                       )
                     )
                 )#fluid page bracket    
+) #secure app
 
 
 ############################.
 ## Server ----
 ############################.
 server <- function(input, output) {
+  
+  #Login
+  credentials_epilepsy <- readRDS("admin/credentials.rds") 
+  
+  
+  # Shinymanager Auth 
+  
+  res_auth <- secure_server( 
+    
+    check_credentials = check_credentials(credentials_epilepsy) 
+    
+  ) 
+  
+  output$auth_output <- renderPrint({ 
+    
+    reactiveValuesToList(res_auth) 
+    
+  }) 
   
   #Allowing user to download data
   output$download_data <- downloadHandler( 
