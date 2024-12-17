@@ -25,7 +25,9 @@ data <- readRDS("data/epilepsy_incidence.rds")
 ############################.
 #Height and widths as percentages to allow responsiveness
 #Using divs as issues with classing css 
-ui <- secure_app(fluidPage(style="width: 650px; height: 500px; ", 
+ui <- 
+  #secure_app(
+  fluidPage(style="width: 650px; height: 500px; ", 
                 div(style= "width:100%", #Filters on top of page
                     h4("Chart 1. New cases (incidence) per 100,000 population with a 
                        main diagnosis of epilepsy, by age and sex, Scotland"),
@@ -60,7 +62,7 @@ ui <- secure_app(fluidPage(style="width: 650px; height: 500px; ",
                       )
                     )
                 )#fluid page bracket    
-) #secure app
+#) #secure app
 
 
 ############################.
@@ -68,23 +70,23 @@ ui <- secure_app(fluidPage(style="width: 650px; height: 500px; ",
 ############################.
 server <- function(input, output) {
   
-  #Login
-  credentials_epilepsy <- readRDS("admin/credentials.rds") 
-  
-  
-  # Shinymanager Auth 
-  
-  res_auth <- secure_server( 
-    
-    check_credentials = check_credentials(credentials_epilepsy) 
-    
-  ) 
-  
-  output$auth_output <- renderPrint({ 
-    
-    reactiveValuesToList(res_auth) 
-    
-  }) 
+  # #Login
+  # credentials_epilepsy <- readRDS("admin/credentials.rds") 
+  # 
+  # 
+  # # Shinymanager Auth 
+  # 
+  # res_auth <- secure_server( 
+  #   
+  #   check_credentials = check_credentials(credentials_epilepsy) 
+  #   
+  # ) 
+  # 
+  # output$auth_output <- renderPrint({ 
+  #   
+  #   reactiveValuesToList(res_auth) 
+  #   
+  # }) 
   
   #Allowing user to download data
   output$download_data <- downloadHandler( 
